@@ -26,14 +26,14 @@ const getById = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const { username, password, firstName, lastName, email, role } = req.body;
+        const { username, password, firstName, lastName, email, role, department } = req.body;
         const user = await User.findByPk(id);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
         // Build explicit update payload — only include password when a new one is provided
-        const updateData = { username, firstName, lastName, email, role };
+        const updateData = { username, firstName, lastName, email, role, department };
         if (password) {
             updateData.password = await bcrypt.hash(password, 10);
         }

@@ -26,7 +26,8 @@ const login = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            role: user.role
+            role: user.role,
+            department: user.department
           }
         });
     } catch (error) {
@@ -36,7 +37,7 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        const { username, password, firstName, lastName, email, role } = req.body;
+        const { username, password, firstName, lastName, email, role, department } = req.body;
 
         const existingUser = await User.findOne({ where: { username } });
         if (existingUser) {
@@ -44,7 +45,7 @@ const register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await User.create({ username, password: hashedPassword, firstName, lastName, email, role });
+        const user = await User.create({ username, password: hashedPassword, firstName, lastName, email, role, department });
         res.status(201).json({ session: user });
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -45,6 +45,14 @@ module.exports = (sequelize, DataTypes) => {
     requirements: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    image: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    createdBy: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     sequelize,

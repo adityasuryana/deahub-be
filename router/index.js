@@ -9,6 +9,7 @@ const partner = require('./partner');
 const upload = require('./upload');
 const career = require('./career');
 const reto = require('./reto');
+const engineering = require('./engineering');
 
 router.get('/server-ip', (req, res) => {
     const interfaces = os.networkInterfaces();
@@ -32,5 +33,6 @@ router.use('/partner', partner);
 router.use('/upload', upload);
 router.use('/career', career);
 router.use('/reto', reto);
+router.use('/engineering', engineering);
 
 module.exports = router;

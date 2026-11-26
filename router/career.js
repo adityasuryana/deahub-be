@@ -16,8 +16,8 @@ const {
 // ── Vacancy Routes ───────────────────────────────────────────────────────────
 router.get('/vacancies', getAllVacancies);
 router.get('/vacancies/:id', getVacancyById);
-router.post('/vacancies', createVacancy);
-router.put('/vacancies/:id', updateVacancy);
+router.post('/vacancies', upload.single('image'), createVacancy);
+router.put('/vacancies/:id', upload.single('image'), updateVacancy);
 router.delete('/vacancies/:id', deleteVacancy);
 
 // ── Applicant Routes ─────────────────────────────────────────────────────────

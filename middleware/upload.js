@@ -16,9 +16,8 @@ const upload = multer({
  * @param {string} originalName - Original name of the file for reference
  * @returns {Promise<Object>} - The upload result from Cloudinary
  */
-const uploadToCloudinary = (fileBuffer, originalName) => {
+const uploadToCloudinary = (fileBuffer, originalName, folder = 'procurement_documents') => {
   return new Promise((resolve, reject) => {
-    const folder = 'procurement_documents';
     
     // Clean original name to remove extension and replace non-alphanumeric chars
     const cleanedName = originalName

@@ -43,8 +43,15 @@ const createVacancy = async (req, res) => {
       status,
       deadline,
       description,
-      requirements
-    } = req.body;
+      requirements,
+      createdBy
+    } = req.body || {};
+
+    let imageUrl = null;
+    if (req.file) {
+      const uploadResult = await uploadToCloudinary(req.file.buffer, req.file.originalname, 'career_vacancies');
+      imageUrl = uploadResult.secure_url;
+    }
 
     const newVacancy = await JobVacancy.create({
       title,
@@ -54,7 +61,9 @@ const createVacancy = async (req, res) => {
       status: status || 'Draft',
       deadline,
       description,
-      requirements
+      requirements,
+      image: imageUrl,
+      createdBy: createdBy || null
     });
 
     res.status(201).json(newVacancy);
@@ -77,12 +86,20 @@ const updateVacancy = async (req, res) => {
       status,
       deadline,
       description,
-      requirements
-    } = req.body;
+      requirements,
+      removeImage
+    } = req.body || {};
 
     const vacancy = await JobVacancy.findByPk(id);
     if (!vacancy) {
       return res.status(404).json({ message: 'Lowongan pekerjaan tidak ditemukan' });
+    }
+
+    if (req.file) {
+      const uploadResult = await uploadToCloudinary(req.file.buffer, req.file.originalname, 'career_vacancies');
+      vacancy.image = uploadResult.secure_url;
+    } else if (removeImage === 'true') {
+      vacancy.image = null;
     }
 
     vacancy.title = title !== undefined ? title : vacancy.title;
