@@ -10,6 +10,7 @@ const upload = require('./upload');
 const career = require('./career');
 const reto = require('./reto');
 const engineering = require('./engineering');
+const notification = require('./notification');
 
 router.get('/server-ip', (req, res) => {
     const interfaces = os.networkInterfaces();
@@ -34,5 +35,6 @@ router.use('/upload', upload);
 router.use('/career', career);
 router.use('/reto', reto);
 router.use('/engineering', engineering);
+router.use('/notifications', notification);
 
 module.exports = router;

@@ -1,5 +1,6 @@
-const { JobVacancy, Applicant } = require('../models');
+const { JobVacancy, Applicant, Notification, User } = require('../models');
 const { uploadToCloudinary } = require('../middleware/upload');
+const { isHRGAUser } = require('./notification');
 
 // ── Vacancy Controllers ──────────────────────────────────────────────────────
 
@@ -181,6 +182,26 @@ const applyJob = async (req, res) => {
       cv: cvUrl,
       status: 'Review' // Initial status
     });
+
+    // Notify HRGA users about the new applicant
+    try {
+      const allUsers = await User.findAll({ attributes: ['id', 'department', 'role'] });
+      const hrgaUsers = allUsers.filter(isHRGAUser);
+      if (hrgaUsers.length > 0) {
+        const notifPayloads = hrgaUsers.map((u) => ({
+          userId: u.id,
+          type: 'new_applicant',
+          title: 'Pelamar Baru',
+          message: `${name} melamar untuk posisi "${vacancy.title}".`,
+          link: '/dashboard/karir',
+          relatedId: newApplicant.id,
+          isRead: false
+        }));
+        await Notification.bulkCreate(notifPayloads);
+      }
+    } catch (notifError) {
+      console.error('Gagal membuat notifikasi HRGA:', notifError);
+    }
 
     res.status(201).json(newApplicant);
   } catch (error) {
